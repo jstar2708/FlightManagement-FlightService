@@ -1,7 +1,9 @@
 package com.jaideep.flightservice.exception;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class FlightServiceCustomException extends RuntimeException {
     private String errorCode;
