@@ -45,7 +45,7 @@ public class FlightServiceImpl implements FlightService {
         List<Flight> flights = flightRepository.findAll();
         return flights.stream()
                 .map(this::mapToFlightResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
