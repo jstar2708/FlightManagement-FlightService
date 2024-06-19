@@ -2,7 +2,6 @@ package com.jaideep.flightservice.service;
 
 import com.jaideep.flightservice.model.FlightRequest;
 import com.jaideep.flightservice.model.FlightResponse;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -12,4 +11,6 @@ public interface FlightService {
     List<FlightResponse> getAllFlights();
 
     FlightResponse getFlightByNumber(String flightNumber);
+
+    void reserveSeats(String flightNumber, int seats);
 }

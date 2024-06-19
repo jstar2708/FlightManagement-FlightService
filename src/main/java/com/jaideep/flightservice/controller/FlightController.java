@@ -27,8 +27,13 @@ public class FlightController {
     }
 
     @GetMapping("/{number}")
-    private ResponseEntity<FlightResponse> getFlightByNumber(@PathVariable("number") String flightNumber) {
+    public ResponseEntity<FlightResponse> getFlightByNumber(@PathVariable("number") String flightNumber) {
         return ResponseEntity.ok(flightService.getFlightByNumber(flightNumber));
+    }
+
+    @PutMapping("/reserveSeats/{id}")
+    public void reserveSeats(@PathVariable("id") String flightNumber, @RequestParam int seats) {
+        flightService.reserveSeats(flightNumber, seats);
     }
 
 }

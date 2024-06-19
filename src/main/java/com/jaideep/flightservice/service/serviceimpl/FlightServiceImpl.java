@@ -9,6 +9,8 @@ import com.jaideep.flightservice.repository.FlightRepository;
 import com.jaideep.flightservice.service.FlightService;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
@@ -61,6 +63,29 @@ public class FlightServiceImpl implements FlightService {
         FlightResponse flightResponse = new FlightResponse();
         BeanUtils.copyProperties(optionalFlight, flightResponse);
         return flightResponse;
+    }
+
+    @Override
+    @Transactional
+    public void reserveSeats(String flightNumber, int seats) {
+        log.info("Reserve seats {} for Flight number : {}", seats, flightNumber);
+        Flight flight = flightRepository.findByFlightNumber(flightNumber)
+                .orElseThrow(() ->
+                    new FlightServiceCustomException(
+                            "Flight with given id : " + flightNumber + " not found",
+                            "FLIGHT_NOT_FOUND"
+                    )
+                );
+
+        if (flight.getAvailableSeats() < seats) {
+            throw new FlightServiceCustomException(
+                    "Flights does have sufficient seats",
+                    "INSUFFICIENT SEATS"
+            );
+        }
+        flight.setAvailableSeats(flight.getAvailableSeats() - seats);
+        flightRepository.save(flight);
+        log.info("Flight seats details updated successfully");
     }
 
     private FlightResponse mapToFlightResponse(Flight flight) {
