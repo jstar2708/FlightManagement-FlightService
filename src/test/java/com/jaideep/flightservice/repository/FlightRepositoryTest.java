@@ -2,6 +2,7 @@ package com.jaideep.flightservice.repository;
 
 import com.jaideep.flightservice.entity.Flight;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -27,6 +28,7 @@ class FlightRepositoryTest {
     }
 
     @Test
+    @DisplayName("Save the flight into the database")
     void save() {
         //Arrange - setting up the data
         //Flight flight = Flight.builder().amount(345.55d).departureDate(LocalDate.of(2024, 3, 1)).arrivalDate(LocalDate.of(2024, 3, 2)).availableSeats(200).totalSeats(500).destination("Delhi").origin("Indore").flightNumber("WEA244").build();
@@ -38,6 +40,7 @@ class FlightRepositoryTest {
     }
 
     @Test
+    @DisplayName("Returns all saved flights")
     void findAll() {
         flightRepository.save(flightOne);
         flightRepository.save(flightTwo);
@@ -48,6 +51,7 @@ class FlightRepositoryTest {
     }
 
     @Test
+    @DisplayName("Returns the Flight with the given id")
     void findById() {
         Flight savedFlight = flightRepository.save(flightOne);
 
@@ -59,6 +63,7 @@ class FlightRepositoryTest {
     }
 
     @Test
+    @DisplayName("Updates a flight and saves it to the Database")
     void updateFlight() {
         Flight savedFlight = flightRepository.save(flightOne);
         savedFlight.setAvailableSeats(150);
@@ -70,6 +75,7 @@ class FlightRepositoryTest {
     }
 
     @Test
+    @DisplayName("Deletes a flight from database")
     void delete() {
         flightRepository.save(flightOne);
         flightRepository.save(flightTwo);
@@ -84,6 +90,7 @@ class FlightRepositoryTest {
     }
 
     @Test
+    @DisplayName("Returns a flight with the given flight number")
     void findByFlightNumber() {
         flightRepository.save(flightOne);
         Optional<Flight> retrieveFlight = flightRepository.findByFlightNumber(flightOne.getFlightNumber());
