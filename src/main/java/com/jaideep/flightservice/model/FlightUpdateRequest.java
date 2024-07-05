@@ -1,8 +1,14 @@
 package com.jaideep.flightservice.model;
 
-import java.time.LocalDate;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDate;
+@Getter
+@Setter
 public class FlightUpdateRequest {
+
+        private Long id;
         private String flightNumber;
         private String origin;
         private String destination;

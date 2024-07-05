@@ -26,17 +26,31 @@ public class FlightServiceImpl implements FlightService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
+    @Transactional
     public FlightResponse createFlight(FlightRequest flightRequest) {
         Flight flight = Flight.builder().flightNumber(flightRequest.flightNumber()).origin(flightRequest.origin()).destination(flightRequest.destination()).arrivalDate(flightRequest.arrivalDate()).totalSeats(flightRequest.totalSeats()).availableSeats(flightRequest.availableSeats()).amount(flightRequest.amount()).departureDate(flightRequest.departureDate()).build();
         flightRepository.save(flight);
         FlightResponse flightResponse = new FlightResponse();
         BeanUtils.copyProperties(flight, flightResponse);
-        FlightUpdateRequest flightUpdateRequest = new FlightUpdateRequest();
-        BeanUtils.copyProperties(flight, flightUpdateRequest);
-        String result = restTemplate.postForObject("http://FLIGHT-SEARCH-SERVICE/v1/api/flight/add", flightUpdateRequest, String.class);
+        FlightUpdateRequest flightUpdateRequest = getFlightUpdateRequest(flight);
+        String result = restTemplate.postForObject("http://localhost:8086/FLIGHT-SEARCH-SERVICE/v1/api/search/addFlight", flightUpdateRequest, String.class);
         log.info("Flight Created {} ", flightResponse.getFlightId());
         log.info(result);
         return flightResponse;
+    }
+
+    private static FlightUpdateRequest getFlightUpdateRequest(Flight flight) {
+        FlightUpdateRequest flightUpdateRequest = new FlightUpdateRequest();
+        flightUpdateRequest.setFlightNumber(flight.getFlightNumber());
+        flightUpdateRequest.setId(flight.getFlightId());
+        flightUpdateRequest.setOrigin(flight.getOrigin());
+        flightUpdateRequest.setDestination(flight.getDestination());
+        flightUpdateRequest.setDepartureDate(flightUpdateRequest.getDepartureDate());
+        flightUpdateRequest.setAmount(flight.getAmount());
+        flightUpdateRequest.setArrivalDate(flight.getArrivalDate());
+        flightUpdateRequest.setTotalSeats(flight.getTotalSeats());
+        flightUpdateRequest.setAvailableSeats(flight.getAvailableSeats());
+        return flightUpdateRequest;
     }
 
     @Override
@@ -68,7 +82,7 @@ public class FlightServiceImpl implements FlightService {
         log.info("Flight seats details updated successfully");
         FlightUpdateRequest flightUpdateRequest = new FlightUpdateRequest();
         BeanUtils.copyProperties(flight, flightUpdateRequest);
-        restTemplate.put("http://FLIGHT-SEARCH-SERVICE/v1/api/update", flightUpdateRequest);
+        restTemplate.put("http://localhost:8086/FLIGHT-SEARCH-SERVICE/v1/api/search/updateFlight", flightUpdateRequest);
         log.info("Flight updated in FlightSearchService");
     }
 
